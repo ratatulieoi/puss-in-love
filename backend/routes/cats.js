@@ -14,6 +14,32 @@ router.get('/', verifyToken, async (req, res) => {
     }
 });
 
+// GET /api/cats/browse?owner_cat_id=1 — browse cats to swipe
+router.get('/browse', verifyToken, async (req, res) => {
+    try {
+        const { owner_cat_id } = req.query;
+
+        if (!owner_cat_id) {
+            return res.status(400).json({ error: 'owner_cat_id is required' });
+        }
+
+        const ownerCat = await catModel.getById(owner_cat_id);
+        if (!ownerCat) {
+            return res.status(404).json({ error: 'Owner cat not found' });
+        }
+
+        if (ownerCat.user_id !== req.user.userId) {
+            return res.status(403).json({ error: 'Owner cat is not yours' });
+        }
+
+        const cats = await catModel.browse(req.user.userId, owner_cat_id);
+        res.json({ data: cats });
+    } catch (err) {
+        console.error('Browse cats error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 // POST /api/cats — add a new cat
 router.post('/', verifyToken, async (req, res) => {
     try {
@@ -78,7 +104,7 @@ router.put('/:id', verifyToken, async (req, res) => {
     }
 });
 
-// DELETE /api/cats/:id — soft delete a cat
+// DELETE /api/cats/:id 
 router.delete('/:id', verifyToken, async (req, res) => {
     try {
         const cat = await catModel.getById(req.params.id);
@@ -92,7 +118,7 @@ router.delete('/:id', verifyToken, async (req, res) => {
             return res.status(403).json({ error: 'Not your cat' });
         }
 
-        await catModel.softDelete(req.params.id);
+        await catModel.remove(req.params.id);
         res.json({ message: 'Cat deleted' });
     } catch (err) {
         console.error('Delete cat error:', err);

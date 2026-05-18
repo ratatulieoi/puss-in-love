@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS messages (
     FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Seed breeds
+
 INSERT IGNORE INTO breeds (name, description, origin) VALUES
 ('Persian', 'Long-haired breed known for flat face and calm temperament', 'Iran'),
 ('Siamese', 'Vocal and social breed with blue eyes and pointed coloring', 'Thailand'),

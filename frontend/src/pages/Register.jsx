@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const API = 'http://localhost:3000/api';
+const API = 'http://localhost:3100/api';
 
 function Register() {
     const [form, setForm] = useState({ email: '', password: '', full_name: '' });

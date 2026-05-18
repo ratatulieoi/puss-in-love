@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const API = 'http://localhost:3000/api';
+const API = 'http://localhost:3100/api';
 
 function Profile({ token }) {
     const [profile, setProfile] = useState(null);

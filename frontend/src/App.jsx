@@ -4,6 +4,9 @@ import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import Profile from './pages/Profile.jsx';
 import Cats from './pages/Cats.jsx';
+import Browse from './pages/Browse.jsx';
+import Matches from './pages/Matches.jsx';
+import Chat from './pages/Chat.jsx';
 
 function App() {
     const [token, setToken] = useState(localStorage.getItem('token'));
@@ -30,6 +33,8 @@ function App() {
                         <>
                             <Link to="/profile">Profile</Link>
                             <Link to="/cats">My Cats</Link>
+                            <Link to="/browse">Browse</Link>
+                            <Link to="/matches">Matches</Link>
                         </>
                     )}
                 </div>
@@ -50,6 +55,9 @@ function App() {
                     <Route path="/register" element={!token ? <Register /> : <Navigate to="/cats" />} />
                     <Route path="/profile" element={token ? <Profile token={token} /> : <Navigate to="/login" />} />
                     <Route path="/cats" element={token ? <Cats token={token} /> : <Navigate to="/login" />} />
+                    <Route path="/browse" element={token ? <Browse token={token} /> : <Navigate to="/login" />} />
+                    <Route path="/matches" element={token ? <Matches token={token} /> : <Navigate to="/login" />} />
+                    <Route path="/chat/:matchId" element={token ? <Chat token={token} /> : <Navigate to="/login" />} />
                     <Route path="*" element={<Navigate to={token ? '/cats' : '/login'} />} />
                 </Routes>
             </div>
