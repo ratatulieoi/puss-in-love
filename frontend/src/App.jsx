@@ -27,9 +27,12 @@ function App() {
         navigate('/login');
     };
 
+    const isLanding = location.pathname === '/';
+    const isAuth = location.pathname === '/login' || location.pathname === '/register';
+
     return (
         <>
-            <nav className={location.pathname === '/' ? 'landing-nav' : ''}>
+            {!isAuth && <nav className={isLanding ? 'landing-nav' : ''}>
                 <div>
                     <Link to="/" style={{ fontWeight: 700, fontSize: 18 }}>Puss In Love</Link>
                     {location.pathname === '/' && !token && (
@@ -59,8 +62,8 @@ function App() {
                         </>
                     )}
                 </div>
-            </nav>
-            <div className={location.pathname === '/' ? 'landing-shell' : 'container'} style={{ marginTop: location.pathname === '/' ? 0 : 20 }}>
+            </nav>}
+            <div className={isLanding ? 'landing-shell' : isAuth ? 'auth-shell' : 'container'} style={{ marginTop: isLanding || isAuth ? 0 : 20 }}>
                 <Routes>
                     <Route path="/" element={<Landing />} />
                     <Route path="/login" element={!token ? <Login onLogin={handleLogin} /> : <Navigate to="/cats" />} />
