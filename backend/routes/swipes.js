@@ -5,6 +5,32 @@ const matchModel = require('../model/matches');
 const catModel = require('../model/cats');
 const verifyToken = require('../middleware/verifyToken');
 
+// GET /api/swipes/browse?owner_cat_id=1 — get swipe candidates
+router.get('/browse', verifyToken, async (req, res) => {
+    try {
+        const { owner_cat_id } = req.query;
+
+        if (!owner_cat_id) {
+            return res.status(400).json({ error: 'owner_cat_id is required' });
+        }
+
+        const ownerCat = await catModel.getById(owner_cat_id);
+        if (!ownerCat) {
+            return res.status(404).json({ error: 'Owner cat not found' });
+        }
+
+        if (ownerCat.user_id !== req.user.userId) {
+            return res.status(403).json({ error: 'Owner cat is not yours' });
+        }
+
+        const cats = await catModel.getSwipeCandidates(req.user.userId, owner_cat_id);
+        res.json({ data: cats });
+    } catch (error) {
+        console.error('Get swipe candidates error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 // POST /api/swipes
 router.post('/', verifyToken, async (req, res) => {
     try {

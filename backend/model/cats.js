@@ -44,7 +44,43 @@ const remove = async (id) => {
     return result.affectedRows;
 };
 
-const browse = async (userId, ownerCatId) => {
+const browse = async ({ search, breedId, gender, location }) => {
+    let sql = `SELECT c.*, b.name AS breed_name, u.full_name AS owner_name, u.location,
+                      p.photo_url AS primary_photo
+               FROM cats c
+               LEFT JOIN breeds b ON b.id = c.breed_id
+               LEFT JOIN users u ON u.id = c.user_id
+               LEFT JOIN cat_photos p ON p.cat_id = c.id AND p.is_primary = TRUE
+               WHERE c.is_active = TRUE`;
+    const params = [];
+
+    if (search) {
+        sql += ' AND (c.name LIKE ? OR u.full_name LIKE ?)';
+        params.push(`%${search}%`, `%${search}%`);
+    }
+
+    if (breedId) {
+        sql += ' AND c.breed_id = ?';
+        params.push(breedId);
+    }
+
+    if (gender) {
+        sql += ' AND c.gender = ?';
+        params.push(gender);
+    }
+
+    if (location) {
+        sql += ' AND u.location LIKE ?';
+        params.push(`%${location}%`);
+    }
+
+    sql += ' ORDER BY c.created_at DESC';
+
+    const [rows] = await db.query(sql, params);
+    return rows;
+};
+
+const getSwipeCandidates = async (userId, ownerCatId) => {
     const [rows] = await db.query(
         `SELECT c.*, b.name AS breed_name, u.full_name AS owner_name, u.location,
                 p.photo_url AS primary_photo
@@ -63,4 +99,4 @@ const browse = async (userId, ownerCatId) => {
     return rows;
 };
 
-module.exports = { getByUserId, getById, create, update, remove, browse };
+module.exports = { getByUserId, getById, create, update, remove, browse, getSwipeCandidates };

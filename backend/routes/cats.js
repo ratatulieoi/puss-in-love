@@ -14,25 +14,15 @@ router.get('/', verifyToken, async (req, res) => {
     }
 });
 
-// GET /api/cats/browse?owner_cat_id=1 — browse cats to swipe
+// GET /api/cats/browse — browse/search cats and owners
 router.get('/browse', verifyToken, async (req, res) => {
     try {
-        const { owner_cat_id } = req.query;
-
-        if (!owner_cat_id) {
-            return res.status(400).json({ error: 'owner_cat_id is required' });
-        }
-
-        const ownerCat = await catModel.getById(owner_cat_id);
-        if (!ownerCat) {
-            return res.status(404).json({ error: 'Owner cat not found' });
-        }
-
-        if (ownerCat.user_id !== req.user.userId) {
-            return res.status(403).json({ error: 'Owner cat is not yours' });
-        }
-
-        const cats = await catModel.browse(req.user.userId, owner_cat_id);
+        const cats = await catModel.browse({
+            search: req.query.search,
+            breedId: req.query.breed_id,
+            gender: req.query.gender,
+            location: req.query.location
+        });
         res.json({ data: cats });
     } catch (err) {
         console.error('Browse cats error:', err);
