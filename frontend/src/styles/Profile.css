@@ -1,0 +1,238 @@
+.profile-page {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 112px clamp(24px, 7vw, 96px) 72px;
+    color: #f8eee9;
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: url('/landing/profile-bg.jpg') center/cover no-repeat;
+}
+
+.profile-page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(43, 27, 40, 0.24);
+    pointer-events: none;
+}
+
+.profile-card {
+    position: relative;
+    z-index: 1;
+    width: min(470px, 100%);
+    padding: 42px;
+    border: 1px solid rgba(255, 231, 211, 0.32);
+    border-radius: 34px;
+    background: transparent;
+    box-shadow: 0 28px 80px rgba(29, 15, 27, 0.28), inset 0 1px 0 rgba(255, 238, 224, 0.14);
+    backdrop-filter: blur(14px);
+}
+
+.profile-kicker {
+    display: inline-block;
+    margin-bottom: 10px;
+    color: #ffe16f;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.profile-card h1 {
+    margin-bottom: 10px;
+    color: #f8eee9;
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.profile-copy {
+    margin-bottom: 28px;
+    color: rgba(248, 238, 233, 0.72);
+    font-size: 15px;
+    line-height: 22px;
+}
+
+.profile-avatar-box {
+    display: grid;
+    justify-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.profile-avatar {
+    width: 132px;
+    height: 132px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border: 1px solid rgba(255, 231, 211, 0.36);
+    border-radius: 50%;
+    color: #ffe16f;
+    background: rgba(255, 247, 244, 0.1);
+    box-shadow: 0 18px 46px rgba(29, 15, 27, 0.24);
+    font-family: 'Baloo 2', 'Nunito', sans-serif;
+    font-size: 52px;
+    font-weight: 700;
+    object-fit: cover;
+}
+
+.profile-avatar-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.profile-file-button {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    max-width: 220px;
+    padding: 10px 16px;
+    border: 1px solid rgba(255, 231, 211, 0.34);
+    border-radius: 999px;
+    color: #f8eee9;
+    background: transparent;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.profile-file-button input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.profile-details {
+    display: grid;
+    gap: 14px;
+}
+
+.profile-details div {
+    padding-bottom: 13px;
+    border-bottom: 1px solid rgba(255, 231, 211, 0.16);
+}
+
+.profile-details span,
+.profile-field label {
+    display: block;
+    margin-bottom: 5px;
+    color: rgba(248, 238, 233, 0.58);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.profile-details strong {
+    color: #f8eee9;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.profile-form {
+    display: grid;
+    gap: 16px;
+}
+
+.profile-field input {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 16px;
+    border: 1px solid rgba(255, 231, 211, 0.34);
+    border-radius: 999px;
+    color: #f8eee9;
+    background: rgba(43, 27, 40, 0.38);
+    outline: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+}
+
+.profile-field input:focus {
+    border-color: #ffe16f;
+    box-shadow: 0 0 0 4px rgba(255, 225, 111, 0.14);
+}
+
+.profile-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.profile-button {
+    min-height: 46px;
+    padding: 10px 18px;
+    border: 1px solid #f8eee9;
+    border-radius: 999px;
+    color: #2b1b28;
+    background: #f8eee9;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.profile-button:hover {
+    background: #ffe16f;
+    border-color: #ffe16f;
+    transform: translateY(-1px);
+}
+
+.profile-button--ghost {
+    color: #f8eee9;
+    background: transparent;
+    border-color: rgba(255, 231, 211, 0.34);
+}
+
+.profile-button--ghost:hover {
+    color: #2b1b28;
+}
+
+.profile-message,
+.profile-loading {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    border-radius: 18px;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.profile-message--success {
+    color: #eaffdb;
+    background: rgba(76, 175, 80, 0.18);
+}
+
+.profile-message--error {
+    color: #ffe2df;
+    background: rgba(244, 67, 54, 0.16);
+}
+
+@media (max-width: 760px) {
+    .profile-page {
+        justify-content: center;
+        padding: 56px 20px;
+    }
+
+    .profile-card {
+        padding: 32px 24px;
+    }
+}

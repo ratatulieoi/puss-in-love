@@ -29,10 +29,13 @@ function App() {
 
     const isLanding = location.pathname === '/';
     const isAuth = location.pathname === '/login' || location.pathname === '/register';
+    const useLandingNav = isLanding || token;
+    const usesAppBackground = ['/browse', '/swipe', '/matches'].includes(location.pathname);
+    const isCatsPage = location.pathname === '/cats';
 
     return (
         <>
-            {!isAuth && <nav className={isLanding ? 'landing-nav' : ''}>
+            {!isAuth && <nav className={useLandingNav ? 'landing-nav' : ''}>
                 <div>
                     <Link to="/" style={{ fontWeight: 700, fontSize: 18 }}>Puss In Love</Link>
                     {location.pathname === '/' && !token && (
@@ -63,9 +66,9 @@ function App() {
                     )}
                 </div>
             </nav>}
-            <div className={isLanding ? 'landing-shell' : isAuth ? 'auth-shell' : 'container'} style={{ marginTop: isLanding || isAuth ? 0 : 20 }}>
+            <div className={isLanding ? 'landing-shell' : isAuth ? 'auth-shell' : isCatsPage ? 'container' : usesAppBackground ? 'container app-bg-shell' : 'container'}>
                 <Routes>
-                    <Route path="/" element={<Landing />} />
+                    <Route path="/" element={<Landing isLoggedIn={!!token} />} />
                     <Route path="/login" element={!token ? <Login onLogin={handleLogin} /> : <Navigate to="/cats" />} />
                     <Route path="/register" element={!token ? <Register /> : <Navigate to="/cats" />} />
                     <Route path="/profile" element={token ? <Profile token={token} /> : <Navigate to="/login" />} />

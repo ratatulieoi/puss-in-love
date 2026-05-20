@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
+import '../styles/Landing.css';
 
-function Landing() {
+function Landing({ isLoggedIn }) {
     return (
         <main className="landing-page">
             <section className="stitch-hero" id="top">
@@ -26,10 +27,12 @@ function Landing() {
                             </span>
                         </span>
                     </p>
-                    <div className="stitch-actions">
-                        <Link className="stitch-btn stitch-btn--primary" to="/register">Register</Link>
-                        <Link className="stitch-btn stitch-btn--ghost" to="/login">Login</Link>
-                    </div>
+                    {!isLoggedIn && (
+                        <div className="stitch-actions">
+                            <Link className="stitch-btn stitch-btn--primary" to="/register">Register</Link>
+                            <Link className="stitch-btn stitch-btn--ghost" to="/login">Login</Link>
+                        </div>
+                    )}
                 </div>
             </section>
 
@@ -111,15 +114,15 @@ function Landing() {
                 <img className="stitch-final__background" src="/landing/final-cta-bg.jpg" alt="Painterly flower field" />
                 <div className="stitch-final__box">
                     <h2>Ready to find a better match for your cat?</h2>
-                    <Link className="stitch-btn stitch-btn--primary stitch-btn--lovely" to="/register">Start Now</Link>
+                    <Link className="stitch-btn stitch-btn--primary stitch-btn--lovely" to={isLoggedIn ? '/swipe' : '/register'}>Start Now</Link>
                 </div>
             </section>
 
             <footer className="stitch-footer">
                 <div>PUSS IN LOVE</div>
                 <nav aria-label="Footer navigation">
-                    <Link to="/login">Login</Link>
-                    <Link to="/register">Register</Link>
+                    {!isLoggedIn && <Link to="/login">Login</Link>}
+                    {!isLoggedIn && <Link to="/register">Register</Link>}
                     <a href="#features">Features</a>
                     <a href="https://github.com/ratatulieoi/puss-in-love" target="_blank" rel="noreferrer">Project</a>
                 </nav>

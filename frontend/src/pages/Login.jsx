@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import '../styles/Auth.css';
 
 const API = 'http://localhost:3100/api';
 
