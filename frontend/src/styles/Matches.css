@@ -1,0 +1,286 @@
+/* ══════════════════════════════════════════
+   Matches Page — Tabs + Cards
+   ══════════════════════════════════════════ */
+
+.matches-page {
+    min-height: 100vh;
+    padding: 100px 24px 48px;
+    background-color: #1a0f18;
+    color: #f8eee9;
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ── Tabs ── */
+.matches-tabs {
+    display: flex;
+    gap: 4px;
+    max-width: 400px;
+    margin: 0 auto 32px;
+    padding: 4px;
+    border-radius: 14px;
+    background: rgba(43,27,40,0.6);
+}
+
+.matches-tab {
+    flex: 1;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: rgba(248,238,233,0.44);
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 200ms ease;
+}
+
+.matches-tab:hover {
+    color: rgba(248,238,233,0.7);
+}
+
+.matches-tab.is-active {
+    background: rgba(255,225,111,0.12);
+    color: #ffe16f;
+}
+
+/* ── Section ── */
+.matches-section {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* ── Empty state ── */
+.matches-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 24px;
+}
+
+.matches-empty-icon {
+    font-size: 52px;
+    margin-bottom: 16px;
+}
+
+.matches-empty h2 {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #f8eee9;
+    margin-bottom: 8px;
+}
+
+.matches-empty p {
+    color: rgba(248,238,233,0.46);
+    font-size: 15px;
+    max-width: 340px;
+}
+
+/* ── Grid ── */
+.matches-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 24px;
+}
+
+/* ── Match card ── */
+.matches-card {
+    border-radius: 20px;
+    overflow: hidden;
+    background: #2b1b28;
+    box-shadow: 0 0 0 1px rgba(248,238,233,0.06);
+}
+
+/* ── Pair (two cats side by side) ── */
+.matches-pair {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 24px 20px 16px;
+}
+
+.matches-pair-cat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.matches-pair-cat img {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.matches-pair-empty {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: rgba(255,225,111,0.08);
+    display: grid;
+    place-items: center;
+    color: rgba(255,225,111,0.3);
+    font-size: 32px;
+    font-family: 'Baloo 2', sans-serif;
+}
+
+.matches-pair-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: rgba(248,238,233,0.75);
+    text-align: center;
+}
+
+.matches-pair-heart {
+    color: #ffe16f;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+/* ── Card info ── */
+.matches-card-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px 12px;
+}
+
+.matches-card-owners {
+    font-size: 13px;
+    color: rgba(248,238,233,0.5);
+    font-weight: 700;
+}
+
+.matches-card-date {
+    font-size: 11px;
+    color: rgba(248,238,233,0.3);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+
+/* ── Card actions ── */
+.matches-card-actions {
+    display: flex;
+    gap: 8px;
+    padding: 0 20px 20px;
+}
+
+.matches-btn {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 999px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 200ms ease;
+}
+
+.matches-btn--chat {
+    background: #ffe16f;
+    color: #1a0f18;
+}
+
+.matches-btn--chat:hover {
+    background: #fff0a3;
+}
+
+.matches-btn--unmatch {
+    background: rgba(248,238,233,0.06);
+    color: rgba(248,238,233,0.48);
+}
+
+.matches-btn--unmatch:hover {
+    background: rgba(255,100,100,0.14);
+    color: #ffb1b1;
+}
+
+.matches-card-actions--liked {
+    padding-top: 0;
+}
+
+.matches-btn--unlike {
+    background: rgba(255,100,100,0.1);
+    color: #ffb1b1;
+    box-shadow: inset 0 0 0 1px rgba(255,100,100,0.16);
+}
+
+.matches-btn--unlike:hover {
+    background: rgba(255,100,100,0.2);
+    color: #ffd2d2;
+}
+
+/* ── Liked card ── */
+.matches-liked-photo {
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    background: #3a2434;
+}
+
+.matches-liked-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.matches-card-body {
+    padding: 16px 20px 20px;
+}
+
+.matches-card-name {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #f8eee9;
+    line-height: 1.1;
+}
+
+.matches-card-meta {
+    font-size: 13px;
+    color: rgba(248,238,233,0.45);
+    margin-top: 4px;
+    font-weight: 700;
+}
+
+.matches-card-owner {
+    font-size: 13px;
+    color: rgba(248,238,233,0.55);
+    margin-top: 8px;
+    font-weight: 600;
+}
+
+.matches-card-from {
+    font-size: 11px;
+    color: rgba(248,238,233,0.3);
+    margin-top: 10px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+    .matches-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .matches-pair-cat img,
+    .matches-pair-empty {
+        width: 64px;
+        height: 64px;
+    }
+}

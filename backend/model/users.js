@@ -29,4 +29,12 @@ const update = async (id, { full_name, phone, location }) => {
     return result.affectedRows;
 };
 
-module.exports = { getByEmail, getById, create, update };
+const updateAvatar = async (id, avatar_url) => {
+    const [result] = await db.query(
+        'UPDATE users SET avatar_url = ? WHERE id = ?',
+        [avatar_url, id]
+    );
+    return result.affectedRows;
+};
+
+module.exports = { getByEmail, getById, create, update, updateAvatar };

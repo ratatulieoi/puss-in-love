@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const matchModel = require('../model/matches');
+const swipeModel = require('../model/swipes');
 const verifyToken = require('../middleware/verifyToken');
 
 const isMember = (match, userId) => {
@@ -11,9 +12,23 @@ const isMember = (match, userId) => {
 router.get('/', verifyToken, async (req, res) => {
     try {
         const matches = await matchModel.getByUserId(req.user.userId);
-        res.json({ data: matches });
+        const liked = await swipeModel.getPendingLikesByUserId(req.user.userId);
+        res.json({ data: matches, liked });
     } catch (error) {
         console.error('Get matches error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// GET /api/matches/:id
+router.get('/:id', verifyToken, async (req, res) => {
+    try {
+        const match = await matchModel.getById(req.params.id);
+        if (!match) return res.status(404).json({ error: 'Match not found' });
+        if (!isMember(match, req.user.userId)) return res.status(403).json({ error: 'Not your match' });
+        res.json({ data: match });
+    } catch (error) {
+        console.error('Get match error:', error);
         res.status(500).json({ error: 'Server error' });
     }
 });

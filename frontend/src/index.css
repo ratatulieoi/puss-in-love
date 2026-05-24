@@ -29,7 +29,7 @@ body {
 
 .app-bg-shell {
     position: relative;
-    background: url('/landing/app-bg.jpg') center/cover fixed no-repeat;
+    background: url('/landing/lazyriver-bg.jpg') center/cover fixed no-repeat;
 }
 
 .app-bg-shell::before {

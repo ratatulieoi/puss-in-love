@@ -44,15 +44,16 @@ const remove = async (id) => {
     return result.affectedRows;
 };
 
-const browse = async ({ search, breedId, gender, location }) => {
+const browse = async ({ search, breedId, gender, location, userId }) => {
     let sql = `SELECT c.*, b.name AS breed_name, u.full_name AS owner_name, u.location,
-                      p.photo_url AS primary_photo
+                      p.photo_url AS primary_photo,
+                      (c.user_id = ?) AS is_owner
                FROM cats c
                LEFT JOIN breeds b ON b.id = c.breed_id
                LEFT JOIN users u ON u.id = c.user_id
                LEFT JOIN cat_photos p ON p.cat_id = c.id AND p.is_primary = TRUE
                WHERE c.is_active = TRUE`;
-    const params = [];
+    const params = [userId];
 
     if (search) {
         sql += ' AND (c.name LIKE ? OR u.full_name LIKE ?)';
@@ -93,10 +94,37 @@ const getSwipeCandidates = async (userId, ownerCatId) => {
            AND c.id NOT IN (
                 SELECT target_cat_id FROM swipes WHERE owner_cat_id = ?
            )
+           AND c.id NOT IN (
+                SELECT CASE
+                    WHEN cat_a_id = ? THEN cat_b_id
+                    ELSE cat_a_id
+                END
+                FROM matches
+                WHERE is_active = TRUE
+                  AND (cat_a_id = ? OR cat_b_id = ?)
+           )
          ORDER BY RAND()`,
-        [userId, ownerCatId]
+        [userId, ownerCatId, ownerCatId, ownerCatId, ownerCatId]
     );
-    return rows;
+
+    if (rows.length === 0) return [];
+
+    const catIds = rows.map(r => r.id);
+    const [photos] = await db.query(
+        `SELECT id, cat_id, photo_url, is_primary FROM cat_photos WHERE cat_id IN (?) ORDER BY is_primary DESC, id ASC`,
+        [catIds]
+    );
+
+    const photoMap = {};
+    for (const ph of photos) {
+        if (!photoMap[ph.cat_id]) photoMap[ph.cat_id] = [];
+        photoMap[ph.cat_id].push(ph.photo_url);
+    }
+
+    return rows.map(cat => ({
+        ...cat,
+        photos: photoMap[cat.id] || []
+    }));
 };
 
 module.exports = { getByUserId, getById, create, update, remove, browse, getSwipeCandidates };

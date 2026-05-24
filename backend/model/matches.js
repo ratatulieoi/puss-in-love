@@ -10,7 +10,24 @@ const getByCats = async (catAId, catBId) => {
 };
 
 const getById = async (id) => {
-    const [rows] = await db.query('SELECT * FROM matches WHERE id = ?', [id]);
+    const [rows] = await db.query(
+        `SELECT m.*,
+                ca.name AS cat_a_name,
+                cb.name AS cat_b_name,
+                ua.full_name AS user_a_name,
+                ub.full_name AS user_b_name,
+                pa.photo_url AS cat_a_photo,
+                pb.photo_url AS cat_b_photo
+         FROM matches m
+         JOIN cats ca ON ca.id = m.cat_a_id
+         JOIN cats cb ON cb.id = m.cat_b_id
+         JOIN users ua ON ua.id = m.user_a_id
+         JOIN users ub ON ub.id = m.user_b_id
+         LEFT JOIN cat_photos pa ON pa.cat_id = m.cat_a_id AND pa.is_primary = TRUE
+         LEFT JOIN cat_photos pb ON pb.cat_id = m.cat_b_id AND pb.is_primary = TRUE
+         WHERE m.id = ?`,
+        [id]
+    );
     return rows[0];
 };
 
@@ -50,4 +67,9 @@ const unmatch = async (id) => {
     return result.affectedRows;
 };
 
-module.exports = { getByCats, getById, getByUserId, create, unmatch };
+const removeByCatId = async (catId) => {
+    const [result] = await db.query('DELETE FROM matches WHERE cat_a_id = ? OR cat_b_id = ?', [catId, catId]);
+    return result.affectedRows;
+};
+
+module.exports = { getByCats, getById, getByUserId, create, unmatch, removeByCatId };

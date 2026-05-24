@@ -30,8 +30,10 @@ function App() {
     const isLanding = location.pathname === '/';
     const isAuth = location.pathname === '/login' || location.pathname === '/register';
     const useLandingNav = isLanding || token;
-    const usesAppBackground = ['/browse', '/swipe', '/matches'].includes(location.pathname);
+    const usesAppBackground = ['/browse', '/matches'].includes(location.pathname);
     const isCatsPage = location.pathname === '/cats';
+    const isSwipePage = location.pathname === '/swipe';
+    const isFullPage = isCatsPage || isSwipePage;
 
     return (
         <>
@@ -66,7 +68,7 @@ function App() {
                     )}
                 </div>
             </nav>}
-            <div className={isLanding ? 'landing-shell' : isAuth ? 'auth-shell' : isCatsPage ? 'container' : usesAppBackground ? 'container app-bg-shell' : 'container'}>
+            <div className={isLanding ? 'landing-shell' : isAuth ? 'auth-shell' : isFullPage ? 'container' : usesAppBackground ? 'container app-bg-shell' : 'container'}>
                 <Routes>
                     <Route path="/" element={<Landing isLoggedIn={!!token} />} />
                     <Route path="/login" element={!token ? <Login onLogin={handleLogin} /> : <Navigate to="/cats" />} />

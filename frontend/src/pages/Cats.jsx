@@ -225,7 +225,7 @@ function Cats({ token }) {
                         <img className="cats-pending-preview" src={URL.createObjectURL(pendingPhoto)} alt="Preview" />
                     ) : (
                         <label>
-                            <span>📷</span>
+                            <span>Photo</span>
                             <p>Choose first photo</p>
                             <input type="file" accept="image/jpeg,image/png" onChange={e => setPendingPhoto(e.target.files[0])} />
                         </label>

@@ -48,4 +48,10 @@ const certificateUpload = multer({
     fileFilter: certificateFilter
 });
 
-module.exports = { photoUpload, certificateUpload };
+const avatarUpload = multer({
+    storage: makeStorage('avatars'),
+    limits: { fileSize: 5 * 1024 * 1024 },
+    fileFilter: imageFilter
+});
+
+module.exports = { photoUpload, certificateUpload, avatarUpload };

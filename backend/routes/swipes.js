@@ -31,6 +31,79 @@ router.get('/browse', verifyToken, async (req, res) => {
     }
 });
 
+// DELETE /api/swipes/owner/:ownerCatId — clear swipe history for selected cat
+router.delete('/owner/:ownerCatId', verifyToken, async (req, res) => {
+    try {
+        const ownerCat = await catModel.getById(req.params.ownerCatId);
+        if (!ownerCat) {
+            return res.status(404).json({ error: 'Owner cat not found' });
+        }
+
+        if (ownerCat.user_id !== req.user.userId) {
+            return res.status(403).json({ error: 'Owner cat is not yours' });
+        }
+
+        await swipeModel.clearPassesByOwnerCatId(req.params.ownerCatId);
+        res.json({ message: 'Swipe history cleared' });
+    } catch (error) {
+        console.error('Clear swipe history error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// DELETE /api/swipes/:id/unlike — undo pending like swipe only
+router.delete('/:id/unlike', verifyToken, async (req, res) => {
+    try {
+        const swipe = await swipeModel.getById(req.params.id);
+        if (!swipe) {
+            return res.status(404).json({ error: 'Swipe not found' });
+        }
+
+        if (swipe.user_id !== req.user.userId) {
+            return res.status(403).json({ error: 'Not your swipe' });
+        }
+
+        if (swipe.direction !== 'like') {
+            return res.status(400).json({ error: 'Only likes can be unliked here' });
+        }
+
+        const match = await matchModel.getByCats(swipe.owner_cat_id, swipe.target_cat_id);
+        if (match && match.is_active) {
+            return res.status(400).json({ error: 'Cannot unlike after a match is created' });
+        }
+
+        await swipeModel.remove(req.params.id);
+        res.json({ message: 'Like removed' });
+    } catch (error) {
+        console.error('Unlike swipe error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// DELETE /api/swipes/:id — undo pass swipe only
+router.delete('/:id', verifyToken, async (req, res) => {
+    try {
+        const swipe = await swipeModel.getById(req.params.id);
+        if (!swipe) {
+            return res.status(404).json({ error: 'Swipe not found' });
+        }
+
+        if (swipe.user_id !== req.user.userId) {
+            return res.status(403).json({ error: 'Not your swipe' });
+        }
+
+        if (swipe.direction !== 'pass') {
+            return res.status(400).json({ error: 'Only pass swipes can be undone' });
+        }
+
+        await swipeModel.remove(req.params.id);
+        res.json({ message: 'Pass undone' });
+    } catch (error) {
+        console.error('Undo swipe error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 // POST /api/swipes
 router.post('/', verifyToken, async (req, res) => {
     try {
@@ -64,7 +137,7 @@ router.post('/', verifyToken, async (req, res) => {
             return res.status(409).json({ error: 'You already swiped this cat' });
         }
 
-        await swipeModel.create({
+        const swipeId = await swipeModel.create({
             user_id: req.user.userId,
             owner_cat_id,
             target_cat_id,
@@ -72,12 +145,12 @@ router.post('/', verifyToken, async (req, res) => {
         });
 
         if (direction === 'pass') {
-            return res.status(201).json({ message: 'Swipe saved', isMatch: false });
+            return res.status(201).json({ message: 'Swipe saved', isMatch: false, swipeId });
         }
 
         const mutualLike = await swipeModel.findMutualLike(owner_cat_id, target_cat_id);
         if (!mutualLike) {
-            return res.status(201).json({ message: 'Swipe saved', isMatch: false });
+            return res.status(201).json({ message: 'Swipe saved', isMatch: false, swipeId });
         }
 
         let match = await matchModel.getByCats(owner_cat_id, target_cat_id);
@@ -91,7 +164,7 @@ router.post('/', verifyToken, async (req, res) => {
             match = { id: matchId };
         }
 
-        res.status(201).json({ message: "It's a Match!", isMatch: true, matchId: match.id });
+        res.status(201).json({ message: "It's a Match!", isMatch: true, matchId: match.id, swipeId });
     } catch (error) {
         console.error('Swipe error:', error);
         res.status(500).json({ error: 'Server error' });

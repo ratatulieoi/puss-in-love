@@ -3,7 +3,7 @@ const router = express.Router();
 const catModel = require('../model/cats');
 const verifyToken = require('../middleware/verifyToken');
 
-// GET /api/cats — get current user's cats
+// GET /api/cats 
 router.get('/', verifyToken, async (req, res) => {
     try {
         const cats = await catModel.getByUserId(req.user.userId);
@@ -14,10 +14,11 @@ router.get('/', verifyToken, async (req, res) => {
     }
 });
 
-// GET /api/cats/browse — browse/search cats and owners
+// GET /api/cats/browse 
 router.get('/browse', verifyToken, async (req, res) => {
     try {
         const cats = await catModel.browse({
+            userId: req.user.userId,
             search: req.query.search,
             breedId: req.query.breed_id,
             gender: req.query.gender,
@@ -30,7 +31,7 @@ router.get('/browse', verifyToken, async (req, res) => {
     }
 });
 
-// POST /api/cats — add a new cat
+// POST /api/cats 
 router.post('/', verifyToken, async (req, res) => {
     try {
         const { breed_id, name, gender, birth_date, color, description } = req.body;
@@ -57,7 +58,7 @@ router.post('/', verifyToken, async (req, res) => {
     }
 });
 
-// PUT /api/cats/:id — edit a cat
+// PUT /api/cats/:id 
 router.put('/:id', verifyToken, async (req, res) => {
     try {
         const cat = await catModel.getById(req.params.id);
