@@ -17,8 +17,22 @@ router.get('/', verifyToken, async (req, res) => {
 // GET /api/cats/browse 
 router.get('/browse', verifyToken, async (req, res) => {
     try {
+        const ownerCatId = req.query.owner_cat_id;
+
+        if (ownerCatId) {
+            const ownerCat = await catModel.getById(ownerCatId);
+            if (!ownerCat) {
+                return res.status(404).json({ error: 'Owner cat not found' });
+            }
+
+            if (ownerCat.user_id !== req.user.userId) {
+                return res.status(403).json({ error: 'Owner cat is not yours' });
+            }
+        }
+
         const cats = await catModel.browse({
             userId: req.user.userId,
+            ownerCatId,
             search: req.query.search,
             breedId: req.query.breed_id,
             gender: req.query.gender,

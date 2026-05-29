@@ -47,6 +47,10 @@
     gap: 18px;
 }
 
+.browse-owner-field {
+    margin-bottom: 20px;
+}
+
 .browse-field {
     display: flex;
     flex-direction: column;
@@ -86,6 +90,16 @@
 .browse-field select option {
     background: #2b1b28;
     color: #f8eee9;
+}
+
+.browse-owner-empty {
+    padding: 10px 14px;
+    border: 1px solid rgba(255,225,111,0.22);
+    border-radius: 12px;
+    background: rgba(255,225,111,0.08);
+    color: rgba(248,238,233,0.72);
+    font-size: 13px;
+    line-height: 1.4;
 }
 
 .browse-actions {
@@ -203,6 +217,12 @@
     text-transform: uppercase;
 }
 
+.browse-badge--match {
+    left: auto;
+    right: 12px;
+    background: #76d672;
+}
+
 /* ── Card photo ── */
 .browse-card-photo {
     width: 100%;
@@ -267,6 +287,89 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
+}
+
+.browse-like-btn {
+    width: 100%;
+    margin-top: 16px;
+    padding: 11px 16px;
+    border-radius: 999px;
+    background: #ffe16f;
+    color: #1a0f18;
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: transform 180ms ease, background 180ms ease, opacity 180ms ease;
+}
+
+.browse-like-btn:hover:not(:disabled) {
+    background: #fff0a3;
+    transform: translateY(-1px);
+}
+
+.browse-like-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.browse-like-btn.is-used,
+.browse-like-btn.is-matched {
+    background: rgba(248,238,233,0.12);
+    color: rgba(248,238,233,0.72);
+    box-shadow: inset 0 0 0 1px rgba(248,238,233,0.12);
+}
+
+.browse-like-btn.is-matched {
+    color: #dfffcc;
+    background: rgba(118,214,114,0.18);
+    box-shadow: inset 0 0 0 1px rgba(118,214,114,0.28);
+}
+
+/* ── Card actions row ── */
+.browse-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.browse-card-actions .browse-like-btn {
+    flex: 1;
+    margin-top: 0;
+}
+
+.browse-report-btn {
+    padding: 11px 14px;
+    border-radius: 999px;
+    background: transparent;
+    color: rgba(248,238,233,0.42);
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid rgba(248,238,233,0.12);
+    cursor: pointer;
+    transition: all 180ms ease;
+    white-space: nowrap;
+}
+
+.browse-report-btn:hover:not(:disabled) {
+    border-color: rgba(244,67,54,0.5);
+    color: rgba(244,67,54,0.9);
+    background: rgba(244,67,54,0.08);
+}
+
+.browse-report-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.35;
+}
+
+.browse-report-btn.is-reported {
+    border-color: rgba(244,67,54,0.25);
+    color: rgba(244,67,54,0.55);
+    background: rgba(244,67,54,0.06);
 }
 
 /* ── Responsive ── */

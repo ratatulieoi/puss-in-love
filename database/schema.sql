@@ -94,6 +94,16 @@ CREATE TABLE IF NOT EXISTS messages (
     FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS reports (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    reporter_id INT NOT NULL,
+    target_cat_id INT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (target_cat_id) REFERENCES cats(id) ON DELETE CASCADE,
+    UNIQUE KEY (reporter_id, target_cat_id)
+);
+
 
 INSERT IGNORE INTO breeds (name, description, origin) VALUES
 ('Persian', 'Long-haired breed known for flat face and calm temperament', 'Iran'),

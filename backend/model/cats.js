@@ -44,16 +44,44 @@ const remove = async (id) => {
     return result.affectedRows;
 };
 
-const browse = async ({ search, breedId, gender, location, userId }) => {
+const browse = async ({ search, breedId, gender, location, userId, ownerCatId }) => {
     let sql = `SELECT c.*, b.name AS breed_name, u.full_name AS owner_name, u.location,
                       p.photo_url AS primary_photo,
-                      (c.user_id = ?) AS is_owner
+                      (c.user_id = ?) AS is_owner,
+                      EXISTS (SELECT 1 FROM reports r WHERE r.reporter_id = ? AND r.target_cat_id = c.id) AS has_reported`;
+    const params = [userId, userId];
+
+    if (ownerCatId) {
+        sql += `,
+                      (
+                        SELECT s.direction
+                        FROM swipes s
+                        WHERE s.user_id = ? AND s.owner_cat_id = ? AND s.target_cat_id = c.id
+                        LIMIT 1
+                      ) AS swipe_direction,
+                      (
+                        SELECT m.id
+                        FROM matches m
+                        WHERE m.is_active = TRUE
+                          AND (
+                            (m.cat_a_id = ? AND m.cat_b_id = c.id)
+                            OR (m.cat_b_id = ? AND m.cat_a_id = c.id)
+                          )
+                        LIMIT 1
+                      ) AS active_match_id`;
+        params.push(userId, ownerCatId, ownerCatId, ownerCatId);
+    } else {
+        sql += `,
+                      NULL AS swipe_direction,
+                      NULL AS active_match_id`;
+    }
+
+    sql += `
                FROM cats c
                LEFT JOIN breeds b ON b.id = c.breed_id
                LEFT JOIN users u ON u.id = c.user_id
                LEFT JOIN cat_photos p ON p.cat_id = c.id AND p.is_primary = TRUE
                WHERE c.is_active = TRUE`;
-    const params = [userId];
 
     if (search) {
         sql += ' AND (c.name LIKE ? OR u.full_name LIKE ?)';
@@ -84,7 +112,8 @@ const browse = async ({ search, breedId, gender, location, userId }) => {
 const getSwipeCandidates = async (userId, ownerCatId) => {
     const [rows] = await db.query(
         `SELECT c.*, b.name AS breed_name, u.full_name AS owner_name, u.location,
-                p.photo_url AS primary_photo
+                p.photo_url AS primary_photo,
+                EXISTS (SELECT 1 FROM reports r WHERE r.reporter_id = ? AND r.target_cat_id = c.id) AS has_reported
          FROM cats c
          LEFT JOIN breeds b ON b.id = c.breed_id
          LEFT JOIN users u ON u.id = c.user_id
@@ -104,7 +133,7 @@ const getSwipeCandidates = async (userId, ownerCatId) => {
                   AND (cat_a_id = ? OR cat_b_id = ?)
            )
          ORDER BY RAND()`,
-        [userId, ownerCatId, ownerCatId, ownerCatId, ownerCatId]
+        [userId, userId, ownerCatId, ownerCatId, ownerCatId, ownerCatId]
     );
 
     if (rows.length === 0) return [];

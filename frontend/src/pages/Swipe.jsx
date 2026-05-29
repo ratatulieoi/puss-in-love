@@ -19,6 +19,8 @@ function Swipe({ token }) {
     const [lastPass, setLastPass] = useState(null);
     const [photoIndex, setPhotoIndex] = useState({});
     const [photoFlip, setPhotoFlip] = useState({});
+    const [reportingId, setReportingId] = useState(null);
+    const [reported, setReported] = useState({});
     const photoFlipTimerRef = useRef(null);
     const selectedCatRef = useRef('');
 
@@ -56,6 +58,7 @@ function Swipe({ token }) {
         setLastPass(null);
         setPhotoIndex({});
         setPhotoFlip({});
+        setReported({});
         if (photoFlipTimerRef.current) clearTimeout(photoFlipTimerRef.current);
         setCandidates([]);
 
@@ -99,6 +102,32 @@ function Swipe({ token }) {
         setUndoDir('left');
         setLastPass(null);
         setTimeout(() => setUndoDir(null), 1000);
+    };
+
+    const reportCat = async (targetId) => {
+        if (!confirm('Report this cat?')) return;
+
+        setMsg('');
+        setError('');
+        setReportingId(targetId);
+
+        try {
+            const res = await fetch(`${API}/reports`, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ target_cat_id: targetId })
+            });
+            const data = await res.json();
+
+            if (!res.ok) return setError(data.error);
+
+            setReported(prev => ({ ...prev, [targetId]: true }));
+            setMsg('Reported');
+        } catch {
+            setError('Failed to report');
+        } finally {
+            setReportingId(null);
+        }
     };
 
     const swipe = useCallback(async (direction) => {
@@ -160,8 +189,8 @@ function Swipe({ token }) {
             }, 360);
         }, 360);
     };
-
     const current = candidates[index];
+    const isAlreadyReported = current ? (reported[current.id] || current.has_reported) : false;
     const isMatch = msg.includes('Match');
 
     const buildMeta = (cat) => {
@@ -240,6 +269,14 @@ function Swipe({ token }) {
                                         {current.description && (
                                             <div className="swipe-card-desc">"{current.description}"</div>
                                         )}
+                                        <button
+                                            type="button"
+                                            className={`swipe-report-btn${isAlreadyReported ? ' is-reported' : ''}`}
+                                            disabled={isAlreadyReported || reportingId === current.id}
+                                            onClick={() => reportCat(current.id)}
+                                        >
+                                            {isAlreadyReported ? 'Reported' : reportingId === current.id ? '…' : 'Report'}
+                                        </button>
                                     </div>
                                 </div>
                             </div>

@@ -9,9 +9,12 @@ import Browse from './pages/Browse.jsx';
 import Swipe from './pages/Swipe.jsx';
 import Matches from './pages/Matches.jsx';
 import Chat from './pages/Chat.jsx';
+import AdminLogin from './pages/AdminLogin.jsx';
+import AdminDashboard from './pages/AdminDashboard.jsx';
 
 function App() {
     const [token, setToken] = useState(localStorage.getItem('token'));
+    const [adminToken, setAdminToken] = useState(localStorage.getItem('adminToken'));
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -21,16 +24,24 @@ function App() {
         navigate('/cats');
     };
 
+    const handleAdminLogin = (t) => {
+        localStorage.setItem('adminToken', t);
+        setAdminToken(t);
+        navigate('/admin');
+    };
+
     const handleLogout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('adminToken');
         setToken(null);
+        setAdminToken(null);
         navigate('/login');
     };
 
     const isLanding = location.pathname === '/';
-    const isAuth = location.pathname === '/login' || location.pathname === '/register';
-    const useLandingNav = isLanding || token;
-    const usesAppBackground = ['/browse', '/matches'].includes(location.pathname);
+    const isAuth = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/admin/login';
+    const useLandingNav = isLanding || token || adminToken;
+    const usesAppBackground = ['/browse', '/matches', '/admin'].includes(location.pathname);
     const isCatsPage = location.pathname === '/cats';
     const isSwipePage = location.pathname === '/swipe';
     const isFullPage = isCatsPage || isSwipePage;
@@ -56,9 +67,10 @@ function App() {
                             <Link to="/matches">Matches</Link>
                         </>
                     )}
+                    {adminToken && <Link to="/admin">Admin</Link>}
                 </div>
                 <div>
-                    {token ? (
+                    {token || adminToken ? (
                         <button onClick={handleLogout}>Logout</button>
                     ) : (
                         <>
@@ -79,6 +91,8 @@ function App() {
                     <Route path="/swipe" element={token ? <Swipe token={token} /> : <Navigate to="/login" />} />
                     <Route path="/matches" element={token ? <Matches token={token} /> : <Navigate to="/login" />} />
                     <Route path="/chat/:matchId" element={token ? <Chat token={token} /> : <Navigate to="/login" />} />
+                    <Route path="/admin/login" element={!adminToken ? <AdminLogin onLogin={handleAdminLogin} /> : <Navigate to="/admin" />} />
+                    <Route path="/admin" element={adminToken ? <AdminDashboard token={adminToken} /> : <Navigate to="/admin/login" />} />
                     <Route path="*" element={<Navigate to={token ? '/cats' : '/'} />} />
                 </Routes>
             </div>

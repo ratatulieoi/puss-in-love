@@ -13,6 +13,8 @@ const vaccinationsRouter = require('./routes/vaccinations');
 const swipesRouter = require('./routes/swipes');
 const matchesRouter = require('./routes/matches');
 const messagesRouter = require('./routes/messages');
+const adminRouter = require('./routes/admin');
+const reportsRouter = require('./routes/reports');
 
 const app = express();
 
@@ -31,6 +33,8 @@ app.use('/api', vaccinationsRouter);
 app.use('/api/swipes', swipesRouter);
 app.use('/api/matches', matchesRouter);
 app.use('/api/messages', messagesRouter);
+app.use('/api/admin', adminRouter);
+app.use('/api/reports', reportsRouter);
 
 // 404
 app.use((req, res) => {
